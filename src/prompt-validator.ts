@@ -1,5 +1,6 @@
 import { ValidationResult, SupportedModel } from './types';
 import { TokenCounter } from './token-counter';
+import { DEFAULT_FREE_MODEL } from './openrouter-types';
 
 /**
  * Prompt validation utility for AI applications
@@ -19,7 +20,7 @@ export class PromptValidator {
   /**
    * Validate a prompt for quality and effectiveness
    */
-  static validate(prompt: string, model: SupportedModel = 'gpt-3.5-turbo'): ValidationResult {
+  static validate(prompt: string, model: SupportedModel = DEFAULT_FREE_MODEL): ValidationResult {
     const errors: string[] = [];
     const warnings: string[] = [];
     const suggestions: string[] = [];
@@ -164,7 +165,7 @@ export class PromptValidator {
   /**
    * Get prompt quality score (0-100)
    */
-  static getQualityScore(prompt: string, model: SupportedModel = 'gpt-3.5-turbo'): number {
+  static getQualityScore(prompt: string, model: SupportedModel = DEFAULT_FREE_MODEL): number {
     const validation = this.validate(prompt, model);
     
     let score = 100;

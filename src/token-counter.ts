@@ -1,38 +1,18 @@
-import { TokenCountResult, SupportedModel, ModelConfig } from './types';
+import { TokenCountResult, SupportedModel, ModelConfig, FreeModel } from './types';
+import { MODEL_CONFIGS, getModelConfig, getFreeModels } from './openrouter-models';
+import { DEFAULT_FREE_MODEL } from './openrouter-types';
 
 /**
  * Token counting utility for various AI models
  */
 export class TokenCounter {
-  private static readonly MODEL_CONFIGS: Record<SupportedModel, ModelConfig> = {
-    // Free tier models
-    'meta-llama/llama-3.1-8b-instruct:free': { name: 'Llama 3.1 8B', maxTokens: 8192, costPerToken: 0 },
-    'google/gemma-2-9b-it:free': { name: 'Gemma 2 9B', maxTokens: 8192, costPerToken: 0 },
-    'microsoft/phi-3-medium-128k-instruct:free': { name: 'Phi-3 Medium', maxTokens: 128000, costPerToken: 0 },
-    'mistralai/mistral-7b-instruct:free': { name: 'Mistral 7B', maxTokens: 8192, costPerToken: 0 },
-    // OpenAI models
-    'openai/gpt-3.5-turbo': { name: 'GPT-3.5 Turbo', maxTokens: 4096, costPerToken: 0.0015 / 1000 },
-    'openai/gpt-4': { name: 'GPT-4', maxTokens: 8192, costPerToken: 0.03 / 1000 },
-    'openai/gpt-4-turbo': { name: 'GPT-4 Turbo', maxTokens: 128000, costPerToken: 0.01 / 1000 },
-    'openai/gpt-4o': { name: 'GPT-4o', maxTokens: 128000, costPerToken: 0.005 / 1000 },
-    // Anthropic models
-    'anthropic/claude-3-haiku': { name: 'Claude 3 Haiku', maxTokens: 200000, costPerToken: 0.00025 / 1000 },
-    'anthropic/claude-3-sonnet': { name: 'Claude 3 Sonnet', maxTokens: 200000, costPerToken: 0.003 / 1000 },
-    'anthropic/claude-3-opus': { name: 'Claude 3 Opus', maxTokens: 200000, costPerToken: 0.015 / 1000 },
-    'anthropic/claude-3.5-sonnet': { name: 'Claude 3.5 Sonnet', maxTokens: 200000, costPerToken: 0.003 / 1000 },
-    // Google models
-    'google/gemini-pro': { name: 'Gemini Pro', maxTokens: 32768, costPerToken: 0.0005 / 1000 },
-    'google/gemini-pro-vision': { name: 'Gemini Pro Vision', maxTokens: 32768, costPerToken: 0.0005 / 1000 },
-    // Meta models
-    'meta-llama/llama-3.1-70b-instruct': { name: 'Llama 3.1 70B', maxTokens: 8192, costPerToken: 0.0009 / 1000 },
-    'meta-llama/llama-3.1-405b-instruct': { name: 'Llama 3.1 405B', maxTokens: 8192, costPerToken: 0.003 / 1000 }
-  };
+  private static readonly MODEL_CONFIGS = MODEL_CONFIGS;
 
   /**
    * Estimate token count for a given text
    * This is a rough estimation based on character count and word patterns
    */
-  static estimateTokens(text: string, model: SupportedModel = 'gpt-3.5-turbo'): TokenCountResult {
+  static estimateTokens(text: string, model: SupportedModel = DEFAULT_FREE_MODEL): TokenCountResult {
     const characters = text.length;
     const words = text.trim().split(/\s+/).filter(word => word.length > 0).length;
     
@@ -89,16 +69,16 @@ export class TokenCounter {
    * Find the best model for a given text length
    */
   static recommendModel(text: string): { model: SupportedModel; reason: string } {
-    const result = this.estimateTokens(text, 'gpt-3.5-turbo');
+    const result = this.estimateTokens(text, DEFAULT_FREE_MODEL);
 
-    if (result.tokens <= 3000) {
-      return { model: 'gpt-3.5-turbo', reason: 'Text fits in GPT-3.5-turbo (most cost-effective)' };
-    } else if (result.tokens <= 6000) {
-      return { model: 'gpt-4', reason: 'Text requires GPT-4 capacity' };
+    if (result.tokens <= 8000) {
+      return { model: DEFAULT_FREE_MODEL, reason: 'Text fits in free tier model (most cost-effective)' };
+    } else if (result.tokens <= 32000) {
+      return { model: 'mistralai/mistral-small-3.2-24b-instruct', reason: 'Text requires medium context model' };
     } else if (result.tokens <= 100000) {
-      return { model: 'gpt-4-turbo', reason: 'Text requires GPT-4-turbo for large context' };
+      return { model: 'anthropic/claude-sonnet-4', reason: 'Text requires large context model' };
     } else {
-      return { model: 'claude-3-sonnet', reason: 'Text requires Claude-3 for very large context' };
+      return { model: 'anthropic/claude-opus-4', reason: 'Text requires very large context model' };
     }
   }
 

@@ -5,11 +5,12 @@ import { TextChunker } from './text-chunker';
 import { PromptValidator } from './prompt-validator';
 import { PromptOptimizer } from './prompt-optimizer';
 import { TokenCountResult, ChunkOptions, ValidationResult, OptimizationResult, SupportedModel } from './types';
+import { DEFAULT_FREE_MODEL } from './openrouter-types';
 
 /**
  * Quick token estimation utility function
  */
-export function estimateTokens(text: string, model: SupportedModel = 'gpt-3.5-turbo'): TokenCountResult {
+export function estimateTokens(text: string, model: SupportedModel = DEFAULT_FREE_MODEL): TokenCountResult {
   return TokenCounter.estimateTokens(text, model);
 }
 
@@ -23,14 +24,14 @@ export function chunkText(text: string, options: ChunkOptions): string[] {
 /**
  * Quick prompt validation utility function
  */
-export function validatePrompt(prompt: string, model: SupportedModel = 'gpt-3.5-turbo'): ValidationResult {
+export function validatePrompt(prompt: string, model: SupportedModel = DEFAULT_FREE_MODEL): ValidationResult {
   return PromptValidator.validate(prompt, model);
 }
 
 /**
  * Quick prompt optimization utility function
  */
-export function optimizePrompt(prompt: string, model: SupportedModel = 'gpt-3.5-turbo'): OptimizationResult {
+export function optimizePrompt(prompt: string, model: SupportedModel = DEFAULT_FREE_MODEL): OptimizationResult {
   return PromptOptimizer.optimize(prompt, model);
 }
 
@@ -58,7 +59,7 @@ export function calculateCost(text: string, model: SupportedModel): number {
 /**
  * Get a quality score for a prompt (0-100)
  */
-export function getPromptQuality(prompt: string, model: SupportedModel = 'gpt-3.5-turbo'): number {
+export function getPromptQuality(prompt: string, model: SupportedModel = DEFAULT_FREE_MODEL): number {
   return PromptValidator.getQualityScore(prompt, model);
 }
 
@@ -72,14 +73,14 @@ export function chunkForModel(text: string, model: SupportedModel, overlapPercen
 /**
  * Optimize prompt to fit within a specific token limit
  */
-export function optimizeToTarget(prompt: string, targetTokens: number, model: SupportedModel = 'gpt-3.5-turbo'): OptimizationResult {
+export function optimizeToTarget(prompt: string, targetTokens: number, model: SupportedModel = DEFAULT_FREE_MODEL): OptimizationResult {
   return PromptOptimizer.optimizeToTarget(prompt, targetTokens, model);
 }
 
 /**
  * Get comprehensive analysis of a prompt
  */
-export function analyzePrompt(prompt: string, model: SupportedModel = 'gpt-3.5-turbo') {
+export function analyzePrompt(prompt: string, model: SupportedModel = DEFAULT_FREE_MODEL) {
   const tokens = estimateTokens(prompt, model);
   const validation = validatePrompt(prompt, model);
   const quality = getPromptQuality(prompt, model);

@@ -38,30 +38,11 @@ export interface OptimizationResult {
 export interface ModelConfig {
   name: string;
   maxTokens: number;
-  costPerToken?: number;
-  encoding?: string;
+  costPerToken: number;
+  modality?: string;
+  architecture?: string;
+  provider?: string;
 }
 
-// OpenRouter model identifiers
-export type SupportedModel =
-  // Free tier models
-  | 'meta-llama/llama-3.1-8b-instruct:free'
-  | 'google/gemma-2-9b-it:free'
-  | 'microsoft/phi-3-medium-128k-instruct:free'
-  | 'mistralai/mistral-7b-instruct:free'
-  // OpenAI models
-  | 'openai/gpt-3.5-turbo'
-  | 'openai/gpt-4'
-  | 'openai/gpt-4-turbo'
-  | 'openai/gpt-4o'
-  // Anthropic models
-  | 'anthropic/claude-3-haiku'
-  | 'anthropic/claude-3-sonnet'
-  | 'anthropic/claude-3-opus'
-  | 'anthropic/claude-3.5-sonnet'
-  // Google models
-  | 'google/gemini-pro'
-  | 'google/gemini-pro-vision'
-  // Meta models
-  | 'meta-llama/llama-3.1-70b-instruct'
-  | 'meta-llama/llama-3.1-405b-instruct';
+// Import OpenRouter model types
+export type { SupportedModel, FreeModel, PaidModel } from './openrouter-types';

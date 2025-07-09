@@ -1,5 +1,6 @@
 import { OptimizationResult, SupportedModel } from './types';
 import { TokenCounter } from './token-counter';
+import { DEFAULT_FREE_MODEL } from './openrouter-types';
 
 /**
  * Prompt optimization utility for reducing token usage while maintaining effectiveness
@@ -8,7 +9,7 @@ export class PromptOptimizer {
   /**
    * Optimize a prompt to reduce token usage
    */
-  static optimize(prompt: string, model: SupportedModel = 'gpt-3.5-turbo'): OptimizationResult {
+  static optimize(prompt: string, model: SupportedModel = DEFAULT_FREE_MODEL): OptimizationResult {
     const originalTokens = TokenCounter.estimateTokens(prompt, model).tokens;
     let optimizedPrompt = prompt;
     const optimizations: string[] = [];
@@ -181,7 +182,7 @@ export class PromptOptimizer {
   static optimizeToTarget(
     prompt: string, 
     targetTokens: number, 
-    model: SupportedModel = 'gpt-3.5-turbo'
+    model: SupportedModel = DEFAULT_FREE_MODEL
   ): OptimizationResult {
     let result = this.optimize(prompt, model);
     
