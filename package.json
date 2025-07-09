@@ -1,6 +1,6 @@
 {
   "name": "@callmedayz/ai-prompt-toolkit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A comprehensive toolkit for AI prompt engineering, token counting, and text processing",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
