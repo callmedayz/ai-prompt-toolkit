@@ -264,6 +264,115 @@ if (validation.isValid) {
 }
 ```
 
+### Streaming Responses (v2.1.0+)
+
+Get real-time streaming responses from AI models.
+
+```typescript
+import { OpenRouterCompletion, StreamingCallback } from '@callmedayz/ai-prompt-toolkit';
+
+const completion = OpenRouterCompletion.fromEnv();
+
+// Stream with callback
+const streamCallback: StreamingCallback = (chunk) => {
+  if (chunk.isComplete) {
+    console.log('\n✅ Stream completed!');
+  } else {
+    process.stdout.write(chunk.content);
+  }
+};
+
+await completion.completeStream('Write a story about AI', streamCallback, {
+  model: 'openai/gpt-3.5-turbo',
+  maxTokens: 200
+});
+
+// Collect streaming results
+const collected = await completion.completeStreamCollected('Explain quantum computing');
+console.log('Full response:', collected.text);
+console.log('Received in chunks:', collected.chunks.length);
+```
+
+### Enhanced Error Handling (v2.1.0+)
+
+Robust error handling with retry logic and circuit breakers.
+
+```typescript
+import {
+  OpenRouterClient,
+  OpenRouterError,
+  ErrorType,
+  CircuitBreaker
+} from '@callmedayz/ai-prompt-toolkit';
+
+// Custom retry configuration
+const client = new OpenRouterClient(
+  { apiKey: 'your-key' },
+  {
+    maxRetries: 5,
+    baseDelay: 1000,
+    maxDelay: 30000,
+    exponentialBase: 2,
+    jitter: true,
+    retryableErrors: [ErrorType.NETWORK, ErrorType.RATE_LIMIT]
+  }
+);
+
+try {
+  const result = await client.completion(request);
+} catch (error) {
+  if (error instanceof OpenRouterError) {
+    console.log(`Error type: ${error.type}`);
+    console.log(`Retryable: ${error.retryable}`);
+    console.log(`Retry after: ${error.retryAfter}ms`);
+  }
+}
+
+// Circuit breaker status
+console.log('Circuit breaker:', client.getCircuitBreakerStatus());
+```
+
+### Rate Limiting & Quota Management (v2.1.0+)
+
+Control API usage and costs with built-in rate limiting and quotas.
+
+```typescript
+import {
+  OpenRouterClient,
+  RateLimitConfig,
+  QuotaConfig
+} from '@callmedayz/ai-prompt-toolkit';
+
+// Configure rate limits
+const rateLimitConfig: RateLimitConfig = {
+  requestsPerMinute: 60,
+  requestsPerHour: 1000,
+  requestsPerDay: 10000,
+  tokensPerMinute: 10000,
+  costPerMinute: 1.0
+};
+
+// Configure quotas
+const quotaConfig: QuotaConfig = {
+  dailyBudget: 10.0,
+  monthlyBudget: 200.0,
+  alertThresholds: [50, 80, 95],
+  autoStop: true
+};
+
+const client = OpenRouterClient.fromEnv(
+  undefined, // API config
+  undefined, // Retry config
+  rateLimitConfig,
+  quotaConfig
+);
+
+// Monitor usage
+console.log('Rate limit status:', client.getRateLimitStatus());
+console.log('Quota status:', client.getQuotaStatus());
+console.log('Quota alerts:', client.getQuotaAlerts());
+```
+
 ## Supported Models (via OpenRouter)
 
 ### Free Tier Models

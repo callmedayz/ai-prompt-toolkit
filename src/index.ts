@@ -8,6 +8,19 @@ export { OpenRouterClient } from './openrouter-client';
 export { OpenRouterCompletion } from './openrouter-completion';
 export { TokenizationService } from './tokenization-service';
 export { ModelTestingService } from './model-testing-service';
+export {
+  OpenRouterError,
+  ErrorType,
+  CircuitBreaker,
+  retryWithBackoff,
+  parseError,
+  calculateRetryDelay
+} from './error-handling';
+export {
+  RateLimiter,
+  QuotaManager,
+  DEFAULT_RATE_LIMITS
+} from './rate-limiting';
 
 // Type exports
 export type {
@@ -20,12 +33,26 @@ export type {
   OpenRouterCompletionRequest,
   OpenRouterCompletionResponse
 } from './types';
-export type { CompletionConfig, CompletionResult } from './openrouter-completion';
+export type {
+  CompletionConfig,
+  CompletionResult,
+  StreamingChunk,
+  StreamingCallback
+} from './openrouter-completion';
 export type {
   ModelTestResult,
   BatchTestResult,
   ModelValidationResult
 } from './model-testing-service';
+export type { RetryConfig } from './error-handling';
+export type {
+  RateLimitConfig,
+  QuotaConfig,
+  UsageStats,
+  QuotaUsage,
+  RateLimitStatus,
+  QuotaAlert
+} from './rate-limiting';
 
 // Utility functions
 export {

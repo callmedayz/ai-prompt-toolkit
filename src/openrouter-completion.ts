@@ -34,6 +34,20 @@ export interface CompletionResult {
 }
 
 /**
+ * Streaming completion chunk
+ */
+export interface StreamingChunk {
+  content: string;
+  isComplete: boolean;
+  model?: string;
+}
+
+/**
+ * Callback for streaming responses
+ */
+export type StreamingCallback = (chunk: StreamingChunk) => void;
+
+/**
  * OpenRouter completion service for generating text responses
  */
 export class OpenRouterCompletion {
@@ -47,9 +61,13 @@ export class OpenRouterCompletion {
    * Generate a completion for a single prompt
    */
   async complete(
-    prompt: string, 
+    prompt: string,
     config: CompletionConfig = {}
   ): Promise<CompletionResult> {
+    if (config.stream) {
+      throw new Error('Use completeStream() for streaming completions');
+    }
+
     const messages: OpenRouterMessage[] = [
       { role: 'user', content: prompt }
     ];
@@ -58,12 +76,31 @@ export class OpenRouterCompletion {
   }
 
   /**
+   * Generate a streaming completion for a single prompt
+   */
+  async completeStream(
+    prompt: string,
+    callback: StreamingCallback,
+    config: CompletionConfig = {}
+  ): Promise<void> {
+    const messages: OpenRouterMessage[] = [
+      { role: 'user', content: prompt }
+    ];
+
+    return this.chatStream(messages, callback, config);
+  }
+
+  /**
    * Generate a completion for a chat conversation
    */
   async chat(
-    messages: OpenRouterMessage[], 
+    messages: OpenRouterMessage[],
     config: CompletionConfig = {}
   ): Promise<CompletionResult> {
+    if (config.stream) {
+      throw new Error('Use chatStream() for streaming completions');
+    }
+
     const request: OpenRouterCompletionRequest = {
       model: config.model || DEFAULT_FREE_MODEL,
       messages,
@@ -71,17 +108,17 @@ export class OpenRouterCompletion {
       temperature: config.temperature,
       top_p: config.topP,
       stop: config.stop,
-      stream: config.stream || false
+      stream: false
     };
 
     const response = await this.client.completion(request);
-    
+
     if (!response.choices || response.choices.length === 0) {
       throw new Error('No completion choices returned from OpenRouter');
     }
 
     const choice = response.choices[0];
-    
+
     return {
       text: choice.message.content,
       model: response.model,
@@ -92,6 +129,51 @@ export class OpenRouterCompletion {
       },
       finishReason: choice.finish_reason
     };
+  }
+
+  /**
+   * Generate a streaming completion for a chat conversation
+   */
+  async chatStream(
+    messages: OpenRouterMessage[],
+    callback: StreamingCallback,
+    config: CompletionConfig = {}
+  ): Promise<void> {
+    const request: OpenRouterCompletionRequest = {
+      model: config.model || DEFAULT_FREE_MODEL,
+      messages,
+      max_tokens: config.maxTokens,
+      temperature: config.temperature,
+      top_p: config.topP,
+      stop: config.stop,
+      stream: true
+    };
+
+    const stream = await this.client.completionStream(request);
+    const reader = stream.getReader();
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+
+        if (done) {
+          callback({
+            content: '',
+            isComplete: true,
+            model: request.model
+          });
+          break;
+        }
+
+        callback({
+          content: value,
+          isComplete: false,
+          model: request.model
+        });
+      }
+    } finally {
+      reader.releaseLock();
+    }
   }
 
   /**
@@ -108,6 +190,26 @@ export class OpenRouterCompletion {
     ];
 
     return this.chat(messages, config);
+  }
+
+  /**
+   * Collect streaming response into a complete result
+   */
+  async completeStreamCollected(
+    prompt: string,
+    config: CompletionConfig = {}
+  ): Promise<{ text: string; chunks: string[] }> {
+    const chunks: string[] = [];
+    let fullText = '';
+
+    await this.completeStream(prompt, (chunk) => {
+      if (!chunk.isComplete && chunk.content) {
+        chunks.push(chunk.content);
+        fullText += chunk.content;
+      }
+    }, config);
+
+    return { text: fullText, chunks };
   }
 
   /**
