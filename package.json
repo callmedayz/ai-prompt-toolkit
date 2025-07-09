@@ -1,0 +1,49 @@
+{
+  "name": "@callmedayz/ai-prompt-toolkit",
+  "version": "1.0.0",
+  "description": "A comprehensive toolkit for AI prompt engineering, token counting, and text processing",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "prepublishOnly": "npm run build && npm test",
+    "dev": "tsc --watch"
+  },
+  "keywords": [
+    "ai",
+    "prompt",
+    "engineering",
+    "tokens",
+    "text-processing",
+    "llm",
+    "gpt",
+    "machine-learning"
+  ],
+  "author": "callmedayz",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/callmedayz/ai-prompt-toolkit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/callmedayz/ai-prompt-toolkit/issues"
+  },
+  "homepage": "https://github.com/callmedayz/ai-prompt-toolkit#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.12",
+    "jest": "^30.0.4",
+    "ts-jest": "^29.4.0",
+    "typescript": "^5.8.3"
+  }
+}
