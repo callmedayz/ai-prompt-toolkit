@@ -1,5 +1,10 @@
 # AI Prompt Toolkit
 
+[![npm version](https://badge.fury.io/js/@callmedayz%2Fai-prompt-toolkit.svg)](https://badge.fury.io/js/@callmedayz%2Fai-prompt-toolkit)
+[![CI](https://github.com/callmedayz/ai-prompt-toolkit/workflows/CI/badge.svg)](https://github.com/callmedayz/ai-prompt-toolkit/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+
 A comprehensive TypeScript/JavaScript toolkit for AI prompt engineering, token counting, and text processing. Perfect for developers working with Large Language Models (LLMs) like GPT, Claude, and other AI systems.
 
 ## Features
