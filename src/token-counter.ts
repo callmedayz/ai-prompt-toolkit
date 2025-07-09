@@ -5,11 +5,27 @@ import { TokenCountResult, SupportedModel, ModelConfig } from './types';
  */
 export class TokenCounter {
   private static readonly MODEL_CONFIGS: Record<SupportedModel, ModelConfig> = {
-    'gpt-3.5-turbo': { name: 'gpt-3.5-turbo', maxTokens: 4096, costPerToken: 0.0015 / 1000 },
-    'gpt-4': { name: 'gpt-4', maxTokens: 8192, costPerToken: 0.03 / 1000 },
-    'gpt-4-turbo': { name: 'gpt-4-turbo', maxTokens: 128000, costPerToken: 0.01 / 1000 },
-    'claude-3-sonnet': { name: 'claude-3-sonnet', maxTokens: 200000, costPerToken: 0.003 / 1000 },
-    'claude-3-opus': { name: 'claude-3-opus', maxTokens: 200000, costPerToken: 0.015 / 1000 }
+    // Free tier models
+    'meta-llama/llama-3.1-8b-instruct:free': { name: 'Llama 3.1 8B', maxTokens: 8192, costPerToken: 0 },
+    'google/gemma-2-9b-it:free': { name: 'Gemma 2 9B', maxTokens: 8192, costPerToken: 0 },
+    'microsoft/phi-3-medium-128k-instruct:free': { name: 'Phi-3 Medium', maxTokens: 128000, costPerToken: 0 },
+    'mistralai/mistral-7b-instruct:free': { name: 'Mistral 7B', maxTokens: 8192, costPerToken: 0 },
+    // OpenAI models
+    'openai/gpt-3.5-turbo': { name: 'GPT-3.5 Turbo', maxTokens: 4096, costPerToken: 0.0015 / 1000 },
+    'openai/gpt-4': { name: 'GPT-4', maxTokens: 8192, costPerToken: 0.03 / 1000 },
+    'openai/gpt-4-turbo': { name: 'GPT-4 Turbo', maxTokens: 128000, costPerToken: 0.01 / 1000 },
+    'openai/gpt-4o': { name: 'GPT-4o', maxTokens: 128000, costPerToken: 0.005 / 1000 },
+    // Anthropic models
+    'anthropic/claude-3-haiku': { name: 'Claude 3 Haiku', maxTokens: 200000, costPerToken: 0.00025 / 1000 },
+    'anthropic/claude-3-sonnet': { name: 'Claude 3 Sonnet', maxTokens: 200000, costPerToken: 0.003 / 1000 },
+    'anthropic/claude-3-opus': { name: 'Claude 3 Opus', maxTokens: 200000, costPerToken: 0.015 / 1000 },
+    'anthropic/claude-3.5-sonnet': { name: 'Claude 3.5 Sonnet', maxTokens: 200000, costPerToken: 0.003 / 1000 },
+    // Google models
+    'google/gemini-pro': { name: 'Gemini Pro', maxTokens: 32768, costPerToken: 0.0005 / 1000 },
+    'google/gemini-pro-vision': { name: 'Gemini Pro Vision', maxTokens: 32768, costPerToken: 0.0005 / 1000 },
+    // Meta models
+    'meta-llama/llama-3.1-70b-instruct': { name: 'Llama 3.1 70B', maxTokens: 8192, costPerToken: 0.0009 / 1000 },
+    'meta-llama/llama-3.1-405b-instruct': { name: 'Llama 3.1 405B', maxTokens: 8192, costPerToken: 0.003 / 1000 }
   };
 
   /**

@@ -42,4 +42,26 @@ export interface ModelConfig {
   encoding?: string;
 }
 
-export type SupportedModel = 'gpt-3.5-turbo' | 'gpt-4' | 'gpt-4-turbo' | 'claude-3-sonnet' | 'claude-3-opus';
+// OpenRouter model identifiers
+export type SupportedModel =
+  // Free tier models
+  | 'meta-llama/llama-3.1-8b-instruct:free'
+  | 'google/gemma-2-9b-it:free'
+  | 'microsoft/phi-3-medium-128k-instruct:free'
+  | 'mistralai/mistral-7b-instruct:free'
+  // OpenAI models
+  | 'openai/gpt-3.5-turbo'
+  | 'openai/gpt-4'
+  | 'openai/gpt-4-turbo'
+  | 'openai/gpt-4o'
+  // Anthropic models
+  | 'anthropic/claude-3-haiku'
+  | 'anthropic/claude-3-sonnet'
+  | 'anthropic/claude-3-opus'
+  | 'anthropic/claude-3.5-sonnet'
+  // Google models
+  | 'google/gemini-pro'
+  | 'google/gemini-pro-vision'
+  // Meta models
+  | 'meta-llama/llama-3.1-70b-instruct'
+  | 'meta-llama/llama-3.1-405b-instruct';

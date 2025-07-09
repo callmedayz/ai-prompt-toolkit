@@ -1,7 +1,7 @@
 {
   "name": "@callmedayz/ai-prompt-toolkit",
   "version": "1.0.1",
-  "description": "A comprehensive toolkit for AI prompt engineering, token counting, and text processing",
+  "description": "A comprehensive toolkit for AI prompt engineering with OpenRouter integration, supporting 100+ AI models including free-tier options",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -14,7 +14,10 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "prepublishOnly": "npm run build && npm test",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "fetch-models": "node scripts/fetch-openrouter-models.js",
+    "generate-config": "node scripts/generate-model-config.js",
+    "update-models": "npm run fetch-models && npm run generate-config && npm run build"
   },
   "keywords": [
     "ai",
@@ -24,6 +27,10 @@
     "text-processing",
     "llm",
     "gpt",
+    "claude",
+    "openrouter",
+    "multimodal",
+    "free-tier",
     "machine-learning"
   ],
   "author": "callmedayz",

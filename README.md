@@ -5,22 +5,39 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 
-A comprehensive TypeScript/JavaScript toolkit for AI prompt engineering, token counting, and text processing. Perfect for developers working with Large Language Models (LLMs) like GPT, Claude, and other AI systems.
+A comprehensive TypeScript/JavaScript toolkit for AI prompt engineering, token counting, and text processing. Built specifically for OpenRouter API integration, providing access to multiple AI models including GPT, Claude, Llama, Gemini, and many free-tier models through a single unified interface.
 
 ## Features
 
 - 🎯 **Prompt Templating**: Dynamic prompt generation with variable substitution
-- 🔢 **Token Counting**: Accurate token estimation for various AI models
+- 🔢 **Token Counting**: Accurate token estimation for OpenRouter-supported models
 - ✂️ **Text Chunking**: Smart text splitting for large documents
 - ✅ **Prompt Validation**: Quality checks and optimization suggestions
 - ⚡ **Prompt Optimization**: Automatic prompt compression and improvement
-- 📊 **Multi-Model Support**: Works with GPT-3.5, GPT-4, Claude, and more
+- 🌐 **OpenRouter Integration**: Access to 100+ AI models through a single API
+- 🆓 **Free Tier Support**: Built-in support for free OpenRouter models
+- 🖼️ **Multimodal Ready**: Support for text and image processing
 
 ## Installation
 
 ```bash
 npm install @callmedayz/ai-prompt-toolkit
 ```
+
+## Setup
+
+To use this toolkit, you'll need an OpenRouter API key:
+
+1. Sign up at [OpenRouter.ai](https://openrouter.ai/)
+2. Get your API key from the dashboard
+3. Set it as an environment variable:
+
+```bash
+# .env file
+OPENROUTER_API_KEY=your_api_key_here
+```
+
+Or pass it directly to the functions that need it.
 
 ## Quick Start
 
@@ -41,8 +58,8 @@ const template = new PromptTemplate({
 const prompt = template.render({ content: 'Hello world!' });
 console.log(prompt); // "Analyze the following text: Hello world!"
 
-// Estimate tokens
-const tokenInfo = estimateTokens(prompt, 'gpt-3.5-turbo');
+// Estimate tokens for OpenRouter models
+const tokenInfo = estimateTokens(prompt, 'openai/gpt-3.5-turbo');
 console.log(`Tokens: ${tokenInfo.tokens}, Cost: $${tokenInfo.estimatedCost}`);
 
 // Validate prompt quality
@@ -159,13 +176,45 @@ const targeted = PromptOptimizer.optimizeToTarget(
 );
 ```
 
-## Supported Models
+## Supported Models (via OpenRouter)
 
-- **GPT-3.5-turbo**: 4,096 tokens
-- **GPT-4**: 8,192 tokens  
-- **GPT-4-turbo**: 128,000 tokens
-- **Claude-3-sonnet**: 200,000 tokens
-- **Claude-3-opus**: 200,000 tokens
+### Free Tier Models
+- **OpenAI GPT-3.5-turbo**: `openai/gpt-3.5-turbo`
+- **Meta Llama 3.1 8B**: `meta-llama/llama-3.1-8b-instruct:free`
+- **Google Gemma 2 9B**: `google/gemma-2-9b-it:free`
+- **Microsoft Phi-3**: `microsoft/phi-3-medium-128k-instruct:free`
+- **Mistral 7B**: `mistralai/mistral-7b-instruct:free`
+
+### Premium Models
+- **GPT-4**: `openai/gpt-4`
+- **GPT-4 Turbo**: `openai/gpt-4-turbo`
+- **Claude-3.5 Sonnet**: `anthropic/claude-3.5-sonnet`
+- **Claude-3 Opus**: `anthropic/claude-3-opus`
+- **Gemini Pro**: `google/gemini-pro`
+
+*See [OpenRouter Models](https://openrouter.ai/models) for the complete list*
+
+## Model Management Scripts
+
+This toolkit includes scripts to keep OpenRouter model data up-to-date:
+
+### Fetch Latest Models
+```bash
+npm run fetch-models
+```
+Fetches the latest model list from OpenRouter API and saves to `data/` directory.
+
+### Generate Model Configurations
+```bash
+npm run generate-config
+```
+Generates TypeScript types and configurations from fetched model data.
+
+### Update Everything
+```bash
+npm run update-models
+```
+Runs both scripts above and rebuilds the package.
 
 ## Utility Functions
 
