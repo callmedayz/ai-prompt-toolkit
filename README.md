@@ -41,12 +41,13 @@ Or pass it directly to the functions that need it.
 
 ## Quick Start
 
+### Basic Usage (Offline)
 ```typescript
-import { 
-  PromptTemplate, 
-  estimateTokens, 
-  validatePrompt, 
-  chunkText 
+import {
+  PromptTemplate,
+  estimateTokens,
+  validatePrompt,
+  chunkText
 } from '@callmedayz/ai-prompt-toolkit';
 
 // Create a prompt template
@@ -58,13 +59,44 @@ const template = new PromptTemplate({
 const prompt = template.render({ content: 'Hello world!' });
 console.log(prompt); // "Analyze the following text: Hello world!"
 
-// Estimate tokens for OpenRouter models
+// Estimate tokens for OpenRouter models (offline estimation)
 const tokenInfo = estimateTokens(prompt, 'openai/gpt-3.5-turbo');
-console.log(`Tokens: ${tokenInfo.tokens}, Cost: $${tokenInfo.estimatedCost}`);
+console.log(`Estimated tokens: ${tokenInfo.tokens}, Cost: $${tokenInfo.estimatedCost}`);
 
 // Validate prompt quality
 const validation = validatePrompt(prompt);
 console.log(`Quality Score: ${validation.isValid ? 'Good' : 'Needs improvement'}`);
+```
+
+### Real API Integration (v2.1.0+)
+```typescript
+import {
+  OpenRouterClient,
+  OpenRouterCompletion,
+  TokenCounter,
+  getTokenCount
+} from '@callmedayz/ai-prompt-toolkit';
+
+// Initialize OpenRouter client
+const client = OpenRouterClient.fromEnv(); // Uses OPENROUTER_API_KEY env var
+// or: const client = new OpenRouterClient({ apiKey: 'your-key' });
+
+// Set up real tokenization
+TokenCounter.setClient(client);
+
+// Get accurate token count using OpenRouter API
+const realTokens = await getTokenCount('Your text here', 'openai/gpt-3.5-turbo');
+console.log(`Actual tokens: ${realTokens.tokens}`);
+
+// Generate real completions
+const completion = new OpenRouterCompletion(client);
+const result = await completion.complete('Write a haiku about AI', {
+  model: 'openai/gpt-3.5-turbo',
+  maxTokens: 100
+});
+
+console.log(`Response: ${result.text}`);
+console.log(`Tokens used: ${result.usage.totalTokens}`);
 ```
 
 ## API Reference
@@ -93,17 +125,33 @@ const validation = template.validate({ name: 'Alice', age: 30 });
 
 ### Token Counting
 
-Estimate tokens and costs for different AI models.
-
+#### Offline Estimation
 ```typescript
 import { TokenCounter, estimateTokens } from '@callmedayz/ai-prompt-toolkit';
 
-// Quick estimation
-const result = estimateTokens('Your text here', 'gpt-4');
+// Quick estimation (offline)
+const result = estimateTokens('Your text here', 'openai/gpt-4');
 console.log(result.tokens, result.estimatedCost);
 
 // Check if text fits in model
-const fits = TokenCounter.fitsInModel('Your text', 'gpt-3.5-turbo');
+const fits = TokenCounter.fitsInModel('Your text', 'openai/gpt-3.5-turbo');
+```
+
+#### Real API Token Counting (v2.1.0+)
+```typescript
+import { OpenRouterClient, TokenCounter, getTokenCount } from '@callmedayz/ai-prompt-toolkit';
+
+// Set up real API tokenization
+const client = OpenRouterClient.fromEnv();
+TokenCounter.setClient(client);
+
+// Get accurate token count from OpenRouter
+const realCount = await getTokenCount('Your text here', 'openai/gpt-4');
+console.log(`Actual tokens: ${realCount.tokens}`);
+
+// Automatically falls back to estimation if API fails
+const safeCount = await getTokenCount('Text', 'anthropic/claude-3-sonnet');
+```
 
 // Get model recommendation
 const recommendation = TokenCounter.recommendModel('Very long text...');
@@ -174,6 +222,46 @@ const targeted = PromptOptimizer.optimizeToTarget(
   100, // target tokens
   'gpt-3.5-turbo'
 );
+```
+
+### OpenRouter Completion API (v2.1.0+)
+
+Generate real AI responses using OpenRouter's API.
+
+```typescript
+import { OpenRouterClient, OpenRouterCompletion } from '@callmedayz/ai-prompt-toolkit';
+
+// Initialize completion service
+const client = OpenRouterClient.fromEnv();
+const completion = new OpenRouterCompletion(client);
+
+// Simple completion
+const result = await completion.complete('Write a haiku about programming', {
+  model: 'openai/gpt-3.5-turbo',
+  maxTokens: 100,
+  temperature: 0.7
+});
+
+console.log(result.text);
+console.log(`Used ${result.usage.totalTokens} tokens`);
+
+// Chat-style completion
+const chatResult = await completion.chat([
+  { role: 'system', content: 'You are a helpful coding assistant.' },
+  { role: 'user', content: 'Explain async/await in JavaScript' }
+], { model: 'anthropic/claude-3-haiku' });
+
+// Test prompt against a model
+const validation = await completion.validatePrompt(
+  'What is 2+2?',
+  'openai/gpt-3.5-turbo'
+);
+
+if (validation.isValid) {
+  console.log('Prompt works!', validation.result?.text);
+} else {
+  console.log('Prompt failed:', validation.error);
+}
 ```
 
 ## Supported Models (via OpenRouter)

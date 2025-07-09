@@ -1,15 +1,80 @@
 import { TokenCountResult, SupportedModel, ModelConfig, FreeModel } from './types';
 import { MODEL_CONFIGS, getModelConfig, getFreeModels } from './openrouter-models';
 import { DEFAULT_FREE_MODEL } from './openrouter-types';
+import { OpenRouterClient } from './openrouter-client';
+import { TokenizationService } from './tokenization-service';
 
 /**
  * Token counting utility for various AI models
  */
 export class TokenCounter {
   private static readonly MODEL_CONFIGS = MODEL_CONFIGS;
+  private static client: OpenRouterClient | null = null;
+  private static tokenizationService: TokenizationService | null = null;
 
   /**
-   * Estimate token count for a given text
+   * Set the OpenRouter client for real tokenization
+   */
+  static setClient(client: OpenRouterClient): void {
+    this.client = client;
+    this.tokenizationService = new TokenizationService(client);
+  }
+
+  /**
+   * Create client from API key
+   */
+  static setApiKey(apiKey: string): void {
+    this.client = new OpenRouterClient({ apiKey });
+    this.tokenizationService = new TokenizationService(this.client);
+  }
+
+  /**
+   * Get accurate token count using OpenRouter's tokenization service
+   */
+  static async getTokenCount(text: string, model: SupportedModel = DEFAULT_FREE_MODEL): Promise<TokenCountResult> {
+    if (!this.tokenizationService) {
+      // Fall back to estimation if no service is set
+      return this.estimateTokens(text, model);
+    }
+
+    return this.tokenizationService.getAccurateTokenCount(text, model);
+  }
+
+  /**
+   * Get detailed token count with native tokenizer information
+   */
+  static async getDetailedTokenCount(text: string, model: SupportedModel = DEFAULT_FREE_MODEL): Promise<TokenCountResult & { generationId?: string; nativeTokens?: number }> {
+    if (!this.tokenizationService) {
+      return { ...this.estimateTokens(text, model), generationId: undefined, nativeTokens: undefined };
+    }
+
+    return this.tokenizationService.getDetailedTokenCount(text, model);
+  }
+
+  /**
+   * Compare estimation accuracy against real API tokenization
+   */
+  static async compareTokenCounts(text: string, model: SupportedModel = DEFAULT_FREE_MODEL): Promise<{
+    estimated: TokenCountResult;
+    actual: TokenCountResult;
+    difference: number;
+    accuracy: number;
+  }> {
+    if (!this.tokenizationService) {
+      const estimated = this.estimateTokens(text, model);
+      return {
+        estimated,
+        actual: estimated,
+        difference: 0,
+        accuracy: 1
+      };
+    }
+
+    return this.tokenizationService.compareTokenCounts(text, model);
+  }
+
+  /**
+   * Estimate token count for a given text (fallback method)
    * This is a rough estimation based on character count and word patterns
    */
   static estimateTokens(text: string, model: SupportedModel = DEFAULT_FREE_MODEL): TokenCountResult {

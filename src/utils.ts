@@ -8,7 +8,33 @@ import { TokenCountResult, ChunkOptions, ValidationResult, OptimizationResult, S
 import { DEFAULT_FREE_MODEL } from './openrouter-types';
 
 /**
- * Quick token estimation utility function
+ * Get accurate token count using OpenRouter API (async)
+ */
+export async function getTokenCount(text: string, model: SupportedModel = DEFAULT_FREE_MODEL): Promise<TokenCountResult> {
+  return TokenCounter.getTokenCount(text, model);
+}
+
+/**
+ * Get detailed token count with native tokenizer information
+ */
+export async function getDetailedTokenCount(text: string, model: SupportedModel = DEFAULT_FREE_MODEL): Promise<TokenCountResult & { generationId?: string; nativeTokens?: number }> {
+  return TokenCounter.getDetailedTokenCount(text, model);
+}
+
+/**
+ * Compare estimation accuracy against real API tokenization
+ */
+export async function compareTokenCounts(text: string, model: SupportedModel = DEFAULT_FREE_MODEL): Promise<{
+  estimated: TokenCountResult;
+  actual: TokenCountResult;
+  difference: number;
+  accuracy: number;
+}> {
+  return TokenCounter.compareTokenCounts(text, model);
+}
+
+/**
+ * Quick token estimation utility function (synchronous fallback)
  */
 export function estimateTokens(text: string, model: SupportedModel = DEFAULT_FREE_MODEL): TokenCountResult {
   return TokenCounter.estimateTokens(text, model);
