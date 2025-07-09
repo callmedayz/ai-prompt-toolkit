@@ -6,6 +6,10 @@ export { PromptValidator } from './prompt-validator';
 export { PromptOptimizer } from './prompt-optimizer';
 export { ChainOfThoughtTemplate, createChainOfThought } from './chain-of-thought';
 export { FewShotTemplate, createFewShot, createExamplesFromData } from './few-shot';
+export { PromptVersionManager, createQuickABTest } from './prompt-versioning';
+export { PromptAnalytics } from './prompt-analytics';
+export { AutoPromptOptimizer } from './auto-prompt-optimizer';
+export { MultimodalPromptTemplate, MultimodalCompletion, createImageInput, validateImageInput } from './multimodal-prompt';
 export { OpenRouterClient } from './openrouter-client';
 export { OpenRouterCompletion } from './openrouter-completion';
 export { TokenizationService } from './tokenization-service';
@@ -61,6 +65,34 @@ export type {
   RateLimitStatus,
   QuotaAlert
 } from './rate-limiting';
+export type {
+  PromptVersion,
+  PromptPerformanceMetrics,
+  ABTestConfig,
+  ABTestResult,
+  TestExecution
+} from './prompt-versioning';
+export type {
+  AnalyticsDataPoint,
+  AnalyticsAggregation,
+  PromptComparison,
+  PerformanceInsights,
+  AnalyticsConfig
+} from './prompt-analytics';
+export type {
+  AutoOptimizationConfig,
+  OptimizationStrategy,
+  OptimizationResult as AutoOptimizationResult,
+  OptimizationRecommendation
+} from './auto-prompt-optimizer';
+export type {
+  ImageFormat,
+  ImageInput,
+  MultimodalContent,
+  MultimodalPromptOptions,
+  MultimodalPromptResult,
+  MultimodalCapabilities
+} from './multimodal-prompt';
 
 // Utility functions
 export {

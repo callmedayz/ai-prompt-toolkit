@@ -9,6 +9,7 @@ A comprehensive TypeScript/JavaScript toolkit for AI prompt engineering, token c
 
 ## Features
 
+### Core Features
 - 🎯 **Prompt Templating**: Dynamic prompt generation with variable substitution
 - 🔢 **Token Counting**: Accurate token estimation for OpenRouter-supported models
 - ✂️ **Text Chunking**: Smart text splitting for large documents
@@ -16,7 +17,12 @@ A comprehensive TypeScript/JavaScript toolkit for AI prompt engineering, token c
 - ⚡ **Prompt Optimization**: Automatic prompt compression and improvement
 - 🌐 **OpenRouter Integration**: Access to 100+ AI models through a single API
 - 🆓 **Free Tier Support**: Built-in support for free OpenRouter models
-- 🖼️ **Multimodal Ready**: Support for text and image processing
+
+### Advanced Features (v2.4.0)
+- 📊 **Prompt Versioning & A/B Testing**: Manage prompt versions and run statistical A/B tests
+- 📈 **Performance Analytics**: Real-time monitoring, insights, and trend analysis
+- 🤖 **Auto-Optimization**: AI-powered prompt improvement using OpenRouter models
+- 🖼️ **Multimodal Support**: Text + image prompts for vision-capable models
 
 ## Installation
 
@@ -566,6 +572,114 @@ const fits = fitsInModel('Text', 'gpt-3.5-turbo');
 const rec = recommendModel('Long text');
 const cost = calculateCost('Text', 'gpt-4');
 const quality = getPromptQuality('Your prompt');
+```
+
+## Advanced Features (v2.4.0)
+
+### Prompt Versioning and A/B Testing
+
+```typescript
+import { PromptVersionManager, createQuickABTest } from '@callmedayz/ai-prompt-toolkit';
+
+// Create version manager
+const manager = new PromptVersionManager();
+
+// Create prompt versions
+const v1 = manager.createVersion('customer-support', 'Help the customer: {issue}');
+const v2 = manager.createVersion('customer-support', 'As a helpful assistant, please address: {issue}');
+
+// Quick A/B test setup
+const { manager: testManager, testConfig } = createQuickABTest(
+  'support-test',
+  'Template A: {input}',
+  'Template B: {input}',
+  { input: 'test' }
+);
+
+// Start A/B test
+const testResult = await manager.startABTest({
+  name: 'Support Prompt Test',
+  variants: [v1, v2],
+  trafficSplit: [50, 50],
+  successCriteria: [
+    { metric: 'success_rate', target: 90, operator: 'greater_than' }
+  ]
+});
+```
+
+### Performance Analytics
+
+```typescript
+import { PromptAnalytics } from '@callmedayz/ai-prompt-toolkit';
+
+// Initialize analytics
+const analytics = new PromptAnalytics({
+  enableRealTimeMonitoring: true,
+  alertThresholds: {
+    successRate: { warning: 85, critical: 70 },
+    responseTime: { warning: 3000, critical: 5000 }
+  }
+});
+
+// Record test execution
+analytics.recordExecution(execution, 'openai/gpt-4.5-preview');
+
+// Generate insights
+const insights = analytics.generateInsights(promptVersionId);
+console.log('Performance insights:', insights);
+
+// Get aggregated metrics
+const dailyMetrics = analytics.generateAggregation(promptVersionId, 'day');
+```
+
+### Auto-Prompt Optimization
+
+```typescript
+import { AutoPromptOptimizer } from '@callmedayz/ai-prompt-toolkit';
+
+// Initialize optimizer
+const optimizer = new AutoPromptOptimizer(versionManager, analytics, {
+  optimizationModel: 'openai/gpt-4.5-preview',
+  targetMetrics: {
+    successRate: { target: 95, weight: 0.4 },
+    responseTime: { target: 2000, weight: 0.3 }
+  }
+});
+
+// Get optimization recommendations
+const recommendations = await optimizer.analyzeForOptimization(promptVersionId);
+
+// Apply AI-powered optimization
+const optimizationResult = await optimizer.optimizePrompt(
+  promptVersionId,
+  'conciseness_optimization'
+);
+```
+
+### Multimodal Prompts
+
+```typescript
+import { MultimodalPromptTemplate, createImageInput } from '@callmedayz/ai-prompt-toolkit';
+
+// Create image inputs
+const productImage = await createImageInput(
+  'https://example.com/product.jpg',
+  'Product photo'
+);
+
+// Create multimodal prompt
+const multimodalPrompt = new MultimodalPromptTemplate({
+  template: 'Analyze this product image and provide insights: {analysis_focus}',
+  variables: { analysis_focus: 'market positioning' },
+  imageVariables: { product: [productImage] },
+  maxImages: 5
+});
+
+// Render prompt with images
+const result = multimodalPrompt.render();
+console.log('Text:', result.text);
+console.log('Images:', result.images.length);
+console.log('Supported models:', result.metadata.supportedModels);
 ```
 
 ## Examples
