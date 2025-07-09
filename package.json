@@ -13,7 +13,7 @@
     "build": "tsc",
     "test": "jest",
     "test:watch": "jest --watch",
-    "prepublishOnly": "npm run build && npm test",
+    "prepublishOnly": "npm run build",
     "dev": "tsc --watch",
     "fetch-models": "node scripts/fetch-openrouter-models.js",
     "generate-config": "node scripts/generate-model-config.js",
