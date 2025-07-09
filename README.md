@@ -840,7 +840,7 @@ console.log('Dashboard exported:', config.length, 'bytes');
 
 Experience all v2.6.0 features in an interactive web interface:
 
-**Location**: `web-app-demo/` directory (excluded from git)
+**Location**: `web-app-demo/` directory (included in repository)
 
 ### Features Demonstrated
 - **Advanced Template Builder**: Create templates with conditionals, loops, and functions
@@ -851,13 +851,16 @@ Experience all v2.6.0 features in an interactive web interface:
 
 ### Quick Start
 ```bash
-cd web-app-demo
+git clone https://github.com/callmedayz/ai-prompt-toolkit.git
+cd ai-prompt-toolkit/web-app-demo
+cp .env.example .env
+# Add your OpenRouter API key to .env
 npm install
 npm start
 # Visit http://localhost:3000
 ```
 
-**Note**: The web demo uses the published `@callmedayz/ai-prompt-toolkit@2.6.0` package and demonstrates real-world usage patterns.
+**Note**: The web demo uses the published `@callmedayz/ai-prompt-toolkit@2.6.1` package and demonstrates real-world usage patterns. Get a free API key at [OpenRouter.ai](https://openrouter.ai).
 
 ## Examples
 

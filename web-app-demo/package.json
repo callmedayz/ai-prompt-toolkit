@@ -1,0 +1,20 @@
+{
+  "name": "ai-prompt-toolkit-web-demo",
+  "version": "1.0.0",
+  "description": "Web demo showcasing AI Prompt Toolkit v2.6.0 features",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["ai", "prompt", "toolkit", "demo", "web", "dashboard"],
+  "author": "AI Prompt Toolkit Team",
+  "license": "MIT",
+  "dependencies": {
+    "@callmedayz/ai-prompt-toolkit": "^2.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0"
+  }
+}
