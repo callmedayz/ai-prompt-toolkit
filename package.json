@@ -1,6 +1,6 @@
 {
   "name": "@callmedayz/ai-prompt-toolkit",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "description": "Professional AI prompt engineering toolkit with advanced template features, real-time dashboards, conditional logic, template inheritance, live monitoring, OpenRouter integration, and 310+ model support",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

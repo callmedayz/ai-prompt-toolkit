@@ -82,6 +82,9 @@ Thumbs.db
 # Test directories
 test-install/
 
+# Web app demo project
+web-app-demo/
+
 # Generated data files
 data/
 
