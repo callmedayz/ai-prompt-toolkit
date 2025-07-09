@@ -66,7 +66,7 @@ describe('TextChunker', () => {
   describe('chunkForModel', () => {
     it.skip('should chunk for GPT-3.5-turbo', () => {
       const longText = 'word '.repeat(20000);
-      const chunks = TextChunker.chunkForModel(longText, 'gpt-3.5-turbo');
+      const chunks = TextChunker.chunkForModel(longText, 'tencent/hunyuan-a13b-instruct:free');
 
       expect(chunks.length).toBeGreaterThan(1);
       // Each chunk should respect the model's token limits
@@ -75,7 +75,7 @@ describe('TextChunker', () => {
 
     it('should chunk for Claude with larger context', () => {
       const longText = 'word '.repeat(5000);
-      const chunks = TextChunker.chunkForModel(longText, 'claude-3-sonnet');
+      const chunks = TextChunker.chunkForModel(longText, 'tencent/hunyuan-a13b-instruct:free');
       
       expect(chunks.length).toBeGreaterThan(0);
       // Claude should handle larger chunks
@@ -84,11 +84,11 @@ describe('TextChunker', () => {
 
     it('should handle overlap percentage', () => {
       const text = 'word '.repeat(100);
-      const chunks = TextChunker.chunkForModel(text, 'gpt-3.5-turbo', 20);
+      const chunks = TextChunker.chunkForModel(text, 'tencent/hunyuan-a13b-instruct:free', 20);
       
       expect(chunks.length).toBeGreaterThan(0);
       // With 20% overlap, should have more chunks
-      const chunksNoOverlap = TextChunker.chunkForModel(text, 'gpt-3.5-turbo', 0);
+      const chunksNoOverlap = TextChunker.chunkForModel(text, 'tencent/hunyuan-a13b-instruct:free', 0);
       expect(chunks.length).toBeGreaterThanOrEqual(chunksNoOverlap.length);
     });
   });

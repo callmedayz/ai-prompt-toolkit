@@ -12,7 +12,7 @@ describe('PromptValidator', () => {
 
     it('should detect prompts that are too long', () => {
       const longPrompt = 'word '.repeat(4000); // Very long prompt
-      const result = PromptValidator.validate(longPrompt, 'gpt-3.5-turbo');
+      const result = PromptValidator.validate(longPrompt, 'tencent/hunyuan-a13b-instruct:free');
 
       expect(result.isValid).toBe(false);
       expect(result.errors.some(error => error.includes('exceeds recommended token limit'))).toBe(true);
@@ -65,8 +65,8 @@ describe('PromptValidator', () => {
     it('should handle different models', () => {
       const mediumPrompt = 'word '.repeat(100);
       
-      const gpt35Result = PromptValidator.validate(mediumPrompt, 'gpt-3.5-turbo');
-      const claudeResult = PromptValidator.validate(mediumPrompt, 'claude-3-sonnet');
+      const gpt35Result = PromptValidator.validate(mediumPrompt, 'tencent/hunyuan-a13b-instruct:free');
+      const claudeResult = PromptValidator.validate(mediumPrompt, 'tencent/hunyuan-a13b-instruct:free');
       
       expect(gpt35Result.isValid).toBe(true);
       expect(claudeResult.isValid).toBe(true);
@@ -92,7 +92,7 @@ describe('PromptValidator', () => {
       const errorPrompt = 'word '.repeat(4000); // Too long - error
       const warningPrompt = 'maybe analyze this somehow'; // Vague - warning
 
-      const errorScore = PromptValidator.getQualityScore(errorPrompt, 'gpt-3.5-turbo');
+      const errorScore = PromptValidator.getQualityScore(errorPrompt, 'tencent/hunyuan-a13b-instruct:free');
       const warningScore = PromptValidator.getQualityScore(warningPrompt);
 
       expect(warningScore).toBeGreaterThan(errorScore);

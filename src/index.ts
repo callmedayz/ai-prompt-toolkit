@@ -10,6 +10,11 @@ export { PromptVersionManager, createQuickABTest } from './prompt-versioning';
 export { PromptAnalytics } from './prompt-analytics';
 export { AutoPromptOptimizer } from './auto-prompt-optimizer';
 export { MultimodalPromptTemplate, MultimodalCompletion, createImageInput, validateImageInput } from './multimodal-prompt';
+export { AdvancedPromptTemplate } from './advanced-prompt-template';
+export { TemplateComposer, createTemplateComposer, createCommonRules } from './template-composition';
+export { TemplateInheritanceManager, createInheritanceManager, createCommonBaseTemplates } from './template-inheritance';
+export { RealTimeDashboard } from './real-time-dashboard';
+export { EnhancedAnalytics, AnomalyDetector, AlertManager } from './enhanced-analytics';
 export { OpenRouterClient } from './openrouter-client';
 export { OpenRouterCompletion } from './openrouter-completion';
 export { TokenizationService } from './tokenization-service';
@@ -43,7 +48,18 @@ export type {
   FewShotExample,
   OpenRouterAPIConfig,
   OpenRouterCompletionRequest,
-  OpenRouterCompletionResponse
+  OpenRouterCompletionResponse,
+  AdvancedTemplateOptions,
+  TemplateContext,
+  ConditionalBlock,
+  LoopBlock,
+  ConditionalResult,
+  LoopResult,
+  DashboardWidget,
+  DashboardLayout,
+  DashboardFilter,
+  RealTimeMetric,
+  LiveMonitoringEvent
 } from './types';
 export type {
   CompletionConfig,
@@ -93,6 +109,22 @@ export type {
   MultimodalPromptResult,
   MultimodalCapabilities
 } from './multimodal-prompt';
+export type {
+  CompositionRule,
+  ContextCondition,
+  BehaviorPattern,
+  ApplicableTemplate,
+  CompositionResult,
+  CompositionStats
+} from './template-composition';
+export type {
+  BaseTemplate,
+  ChildTemplateOptions,
+  BlockDefinition,
+  SectionDefinition,
+  TemplateHierarchy,
+  ValidationResult as InheritanceValidationResult
+} from './template-inheritance';
 
 // Utility functions
 export {

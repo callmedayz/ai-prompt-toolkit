@@ -7,6 +7,101 @@ export interface PromptTemplateOptions {
   preserveWhitespace?: boolean;
 }
 
+// Advanced Template Types (v2.5.0)
+export interface ConditionalBlock {
+  condition: string;
+  trueContent: string;
+  falseContent?: string;
+}
+
+export interface LoopBlock {
+  variable: string;
+  array: string;
+  template: string;
+  separator?: string;
+}
+
+export interface AdvancedTemplateOptions extends PromptTemplateOptions {
+  enableConditionals?: boolean;
+  enableLoops?: boolean;
+  enableInheritance?: boolean;
+  baseTemplate?: string;
+  customFunctions?: Record<string, (value: any, ...args: any[]) => any>;
+}
+
+export interface TemplateContext {
+  variables: Record<string, any>;
+  functions: Record<string, Function>;
+  metadata: Record<string, any>;
+}
+
+export interface ConditionalResult {
+  condition: string;
+  result: boolean;
+  evaluatedContent: string;
+}
+
+export interface LoopResult {
+  variable: string;
+  iterations: number;
+  content: string;
+}
+
+// Real-time Dashboard Types (v2.6.0)
+export interface DashboardWidget {
+  id: string;
+  type: 'metric' | 'chart' | 'table' | 'alert' | 'trend';
+  title: string;
+  position: { x: number; y: number; width: number; height: number };
+  config: Record<string, any>;
+  refreshInterval?: number; // seconds
+  dataSource: string;
+}
+
+export interface DashboardLayout {
+  id: string;
+  name: string;
+  description?: string;
+  widgets: DashboardWidget[];
+  filters: DashboardFilter[];
+  autoRefresh: boolean;
+  refreshInterval: number; // seconds
+}
+
+export interface DashboardFilter {
+  id: string;
+  type: 'timeRange' | 'promptVersion' | 'model' | 'metric' | 'custom';
+  label: string;
+  value: any;
+  options?: any[];
+}
+
+export interface RealTimeMetric {
+  id: string;
+  name: string;
+  value: number;
+  previousValue?: number;
+  change?: number;
+  changePercent?: number;
+  trend: 'up' | 'down' | 'stable';
+  status: 'good' | 'warning' | 'critical';
+  timestamp: Date;
+  unit?: string;
+  format?: 'number' | 'percentage' | 'currency' | 'duration';
+}
+
+export interface LiveMonitoringEvent {
+  id: string;
+  type: 'execution' | 'alert' | 'anomaly' | 'threshold';
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  title: string;
+  description: string;
+  timestamp: Date;
+  promptVersionId?: string;
+  model?: string;
+  metadata?: Record<string, any>;
+}
+
 export interface TokenCountResult {
   tokens: number;
   characters: number;

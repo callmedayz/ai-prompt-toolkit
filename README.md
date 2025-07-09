@@ -24,6 +24,20 @@ A comprehensive TypeScript/JavaScript toolkit for AI prompt engineering, token c
 - 🤖 **Auto-Optimization**: AI-powered prompt improvement using OpenRouter models
 - 🖼️ **Multimodal Support**: Text + image prompts for vision-capable models
 
+### 🚀 NEW! Advanced Template Features (v2.5.0)
+- 🔀 **Conditional Logic**: If/else statements and branching in templates
+- 🔄 **Loop Processing**: Iterate over arrays with #each syntax
+- 🏗️ **Template Inheritance**: Base templates with child overrides and composition
+- 🎯 **Dynamic Composition**: Rule-based template selection based on context
+- ⚡ **Smart Functions**: Built-in and custom functions for template processing
+
+### 📊 NEW! Enhanced Analytics & Dashboards (v2.6.0)
+- 📈 **Real-time Dashboards**: Live performance monitoring with customizable widgets
+- 🔔 **Live Monitoring**: Event-driven updates with anomaly detection
+- 📋 **Custom Metrics**: Configurable KPIs and business intelligence
+- 🚨 **Alert System**: Threshold-based alerting with severity levels
+- 📤 **Dashboard Export**: Save and share dashboard configurations
+
 ## Installation
 
 ```bash
@@ -682,15 +696,150 @@ console.log('Images:', result.images.length);
 console.log('Supported models:', result.metadata.supportedModels);
 ```
 
+### 🚀 NEW! Advanced Template Features (v2.5.0)
+
+```typescript
+import { AdvancedPromptTemplate, TemplateComposer, TemplateInheritanceManager } from '@callmedayz/ai-prompt-toolkit';
+
+// Advanced templates with conditional logic and loops
+const advancedTemplate = new AdvancedPromptTemplate({
+  template: `
+You are a {{#if user_level == "expert"}}senior{{#else}}helpful{{/if}} AI assistant.
+
+{{#if task_complexity > 5}}
+This is a complex task. Please break it down:
+{{#each steps as step}}
+{step_index}. {{capitalize(step)}}
+{{/each}}
+{{#else}}
+This is a straightforward task.
+{{/if}}
+
+{{#if length(examples) > 0}}
+Examples: {{join(examples, ", ")}}
+{{/if}}
+  `,
+  variables: {
+    user_level: 'expert',
+    task_complexity: 7,
+    steps: ['analyze requirements', 'design solution', 'implement'],
+    examples: ['example 1', 'example 2']
+  }
+});
+
+const result = advancedTemplate.render();
+console.log(result);
+
+// Dynamic template composition
+const composer = new TemplateComposer();
+
+composer.registerTemplate('simple', new AdvancedPromptTemplate({
+  template: 'Simple task: {task}'
+}));
+
+composer.registerTemplate('complex', new AdvancedPromptTemplate({
+  template: 'Complex analysis required for: {task}'
+}));
+
+// Add composition rules
+composer.addCompositionRule({
+  name: 'complexity_rule',
+  conditions: [{ field: 'complexity', operator: 'greater_than', value: 5 }],
+  templatePattern: 'complex',
+  priority: 10
+});
+
+const composedResult = composer.compose({
+  complexity: 8,
+  task: 'Market analysis'
+});
+
+console.log('Selected template:', composedResult.templateName);
+console.log('Generated prompt:', composedResult.prompt);
+```
+
+### 📊 NEW! Real-time Analytics & Dashboards (v2.6.0)
+
+```typescript
+import { EnhancedAnalytics, RealTimeDashboard } from '@callmedayz/ai-prompt-toolkit';
+
+// Initialize enhanced analytics with real-time monitoring
+const analytics = new EnhancedAnalytics({
+  enableRealTimeMonitoring: true,
+  alertThresholds: {
+    successRate: { warning: 90, critical: 80 },
+    responseTime: { warning: 2000, critical: 5000 }
+  }
+});
+
+// Enable real-time monitoring
+analytics.enableRealTimeMonitoring();
+
+// Get dashboard instance
+const dashboard = analytics.getDashboard();
+
+// Create custom dashboard layout
+const layoutId = dashboard.createLayout({
+  name: 'AI Performance Monitor',
+  autoRefresh: true,
+  refreshInterval: 15,
+  widgets: [
+    {
+      id: 'success_rate',
+      type: 'metric',
+      title: 'Success Rate',
+      position: { x: 0, y: 0, width: 3, height: 2 },
+      config: { metric: 'successRate', format: 'percentage' }
+    },
+    {
+      id: 'response_time',
+      type: 'metric',
+      title: 'Response Time',
+      position: { x: 3, y: 0, width: 3, height: 2 },
+      config: { metric: 'averageResponseTime', format: 'duration' }
+    }
+  ]
+});
+
+// Subscribe to real-time updates
+dashboard.subscribe('metric:success_rate', (metric) => {
+  console.log(`Success Rate: ${metric.value.toFixed(1)}% (${metric.trend})`);
+});
+
+dashboard.subscribe('alerts', (alert) => {
+  console.log(`🚨 ALERT: ${alert.title}`);
+});
+
+// Record executions (triggers real-time updates)
+analytics.recordExecution({
+  id: 'exec_1',
+  promptVersionId: 'prompt_v1',
+  responseTime: 1500,
+  success: true,
+  cost: 0.005,
+  timestamp: new Date()
+}, 'openai/gpt-3.5-turbo');
+
+// Get real-time metrics
+const metrics = analytics.getRealTimeMetrics();
+console.log('Current metrics:', metrics);
+
+// Export dashboard configuration
+const config = dashboard.exportDashboard();
+console.log('Dashboard exported:', config.length, 'bytes');
+```
+
 ## Examples
 
 See the `/examples` directory for complete usage examples:
 
-- Basic prompt templating
-- Token counting and cost estimation
-- Text chunking for large documents
-- Prompt validation and optimization
-- Multi-model workflows
+- Basic prompt templating and token counting
+- Advanced template features with conditionals and loops
+- Real-time dashboard monitoring
+- Prompt versioning and A/B testing
+- Performance analytics and optimization
+- Multimodal prompts with images
+- Multi-model workflows with OpenRouter
 
 ## Contributing
 
