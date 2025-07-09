@@ -68,6 +68,31 @@ const validation = validatePrompt(prompt);
 console.log(`Quality Score: ${validation.isValid ? 'Good' : 'Needs improvement'}`);
 ```
 
+### Enhanced Prompt Engineering (v2.3.0+)
+```typescript
+import {
+  ChainOfThoughtTemplate,
+  FewShotTemplate,
+  createChainOfThought,
+  createFewShot
+} from '@callmedayz/ai-prompt-toolkit';
+
+// Chain-of-Thought Reasoning
+const problemSolver = ChainOfThoughtTemplate.createPattern('problem-solving');
+const result = problemSolver.generate({ problem: 'Optimize database performance' });
+console.log(result.prompt);
+
+// Few-Shot Learning
+const classifier = new FewShotTemplate({
+  task: 'Classify customer sentiment',
+  examples: [
+    { input: 'Love this product!', output: 'positive' },
+    { input: 'Terrible experience', output: 'negative' }
+  ]
+});
+const classification = classifier.generate('This is okay');
+```
+
 ### Real API Integration (v2.1.0+)
 ```typescript
 import {
@@ -123,6 +148,114 @@ const vars = template.getVariables(); // ['name', 'age']
 const validation = template.validate({ name: 'Alice', age: 30 });
 ```
 
+### Chain-of-Thought Templates
+
+Create structured prompts that guide AI models through step-by-step reasoning:
+
+```typescript
+import { ChainOfThoughtTemplate, createChainOfThought } from '@callmedayz/ai-prompt-toolkit';
+
+// Use pre-built patterns
+const problemSolver = ChainOfThoughtTemplate.createPattern('problem-solving');
+const analysisChain = ChainOfThoughtTemplate.createPattern('analysis');
+const decisionMaker = ChainOfThoughtTemplate.createPattern('decision-making');
+const creativeChain = ChainOfThoughtTemplate.createPattern('creative');
+
+// Generate structured reasoning prompt
+const result = problemSolver.generate({
+  problem: 'Optimize database query performance for high-traffic application'
+});
+
+console.log(`Steps: ${result.stepCount}, Complexity: ${result.complexity}`);
+console.log(result.prompt);
+
+// Create custom chain-of-thought
+const customChain = new ChainOfThoughtTemplate({
+  problem: 'Design a scalable microservices architecture',
+  context: 'E-commerce platform with 1M+ users',
+  constraints: ['High availability', 'Cost-effective', 'Easy to maintain'],
+  steps: [
+    {
+      id: 'requirements',
+      title: 'Requirements Analysis',
+      instruction: 'Identify functional and non-functional requirements',
+      reasoning: 'Clear requirements guide architectural decisions'
+    },
+    {
+      id: 'design',
+      title: 'Architecture Design',
+      instruction: 'Design service boundaries and communication patterns'
+    }
+  ],
+  reasoningStyle: 'detailed'
+});
+
+// Quick chain creation
+const quickChain = createChainOfThought(
+  'Implement CI/CD pipeline',
+  ['Plan pipeline stages', 'Configure tools', 'Test and deploy'],
+  { reasoningStyle: 'step-by-step' }
+);
+```
+
+### Few-Shot Learning Templates
+
+Enable AI models to learn from examples and apply patterns to new inputs:
+
+```typescript
+import { FewShotTemplate, createFewShot, createExamplesFromData } from '@callmedayz/ai-prompt-toolkit';
+
+// Create classification template
+const sentimentClassifier = new FewShotTemplate({
+  task: 'Classify customer review sentiment',
+  instructions: 'Analyze the sentiment as positive, negative, or neutral',
+  examples: [
+    {
+      input: 'This product exceeded my expectations! Amazing quality.',
+      output: 'positive',
+      explanation: 'Enthusiastic language and positive descriptors'
+    },
+    {
+      input: 'Terrible customer service, very disappointed.',
+      output: 'negative',
+      explanation: 'Clear negative sentiment and dissatisfaction'
+    },
+    {
+      input: 'The product works as described, nothing special.',
+      output: 'neutral',
+      explanation: 'Factual statement without strong emotional indicators'
+    }
+  ]
+});
+
+const result = sentimentClassifier.generate('The delivery was fast but packaging was damaged');
+console.log(result.prompt);
+
+// Use pre-built patterns
+const dataExtractor = FewShotTemplate.createPattern('extraction', 'contact information');
+const codeGenerator = FewShotTemplate.createPattern('generation', 'SQL queries');
+const documentClassifier = FewShotTemplate.createPattern('classification', 'document types');
+
+// Quick few-shot creation
+const quickClassifier = createFewShot(
+  'Categorize support tickets',
+  [
+    { input: 'Login not working', output: 'technical' },
+    { input: 'Billing question', output: 'financial' },
+    { input: 'Feature request', output: 'product' }
+  ],
+  'Password reset email not received',
+  { instructions: 'Categorize based on the type of issue' }
+);
+
+// Create examples from dataset
+const trainingData = [
+  { input: { age: 25, purchases: 12 }, output: 'regular' },
+  { input: { age: 45, purchases: 50 }, output: 'premium' }
+];
+const examples = createExamplesFromData(trainingData, 5);
+```
+
 ### Token Counting
 
 #### Offline Estimation
@@ -130,11 +263,11 @@ const validation = template.validate({ name: 'Alice', age: 30 });
 import { TokenCounter, estimateTokens } from '@callmedayz/ai-prompt-toolkit';
 
 // Quick estimation (offline)
-const result = estimateTokens('Your text here', 'openai/gpt-4');
+const result = estimateTokens('Your text here', 'tencent/hunyuan-a13b-instruct:free');
 console.log(result.tokens, result.estimatedCost);
 
 // Check if text fits in model
-const fits = TokenCounter.fitsInModel('Your text', 'openai/gpt-3.5-turbo');
+const fits = TokenCounter.fitsInModel('Your text', 'tencent/hunyuan-a13b-instruct:free');
 ```
 
 #### Real API Token Counting (v2.1.0+)

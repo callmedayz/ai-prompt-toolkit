@@ -1,7 +1,7 @@
 {
   "name": "@callmedayz/ai-prompt-toolkit",
-  "version": "2.2.0",
-  "description": "A comprehensive toolkit for AI prompt engineering with OpenRouter integration, supporting 100+ AI models including free-tier options",
+  "version": "2.3.0",
+  "description": "Professional AI prompt engineering toolkit with Chain-of-Thought templates, Few-Shot learning, OpenRouter integration, real API calls, streaming responses, and 310+ model support",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [

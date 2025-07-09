@@ -4,6 +4,8 @@ export { TokenCounter } from './token-counter';
 export { TextChunker } from './text-chunker';
 export { PromptValidator } from './prompt-validator';
 export { PromptOptimizer } from './prompt-optimizer';
+export { ChainOfThoughtTemplate, createChainOfThought } from './chain-of-thought';
+export { FewShotTemplate, createFewShot, createExamplesFromData } from './few-shot';
 export { OpenRouterClient } from './openrouter-client';
 export { OpenRouterCompletion } from './openrouter-completion';
 export { TokenizationService } from './tokenization-service';
@@ -29,6 +31,12 @@ export type {
   ChunkOptions,
   ValidationResult,
   OptimizationResult,
+  ChainOfThoughtOptions,
+  ChainOfThoughtResult,
+  ChainOfThoughtStep,
+  FewShotOptions,
+  FewShotResult,
+  FewShotExample,
   OpenRouterAPIConfig,
   OpenRouterCompletionRequest,
   OpenRouterCompletionResponse

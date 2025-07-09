@@ -35,6 +35,53 @@ export interface OptimizationResult {
   optimizations: string[];
 }
 
+// Chain-of-Thought Template Types
+export interface ChainOfThoughtStep {
+  id: string;
+  title: string;
+  instruction: string;
+  reasoning?: string;
+  examples?: string[];
+}
+
+export interface ChainOfThoughtOptions {
+  problem: string;
+  steps: ChainOfThoughtStep[];
+  context?: string;
+  constraints?: string[];
+  expectedOutput?: string;
+  reasoningStyle?: 'detailed' | 'concise' | 'step-by-step';
+}
+
+export interface ChainOfThoughtResult {
+  prompt: string;
+  stepCount: number;
+  estimatedTokens: number;
+  complexity: 'simple' | 'moderate' | 'complex';
+}
+
+// Few-Shot Learning Types
+export interface FewShotExample {
+  input: string;
+  output: string;
+  explanation?: string;
+}
+
+export interface FewShotOptions {
+  task: string;
+  examples: FewShotExample[];
+  inputFormat?: string;
+  outputFormat?: string;
+  instructions?: string;
+  maxExamples?: number;
+}
+
+export interface FewShotResult {
+  prompt: string;
+  exampleCount: number;
+  estimatedTokens: number;
+}
+
 export interface ModelConfig {
   name: string;
   maxTokens: number;
