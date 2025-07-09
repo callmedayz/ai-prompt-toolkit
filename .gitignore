@@ -81,3 +81,9 @@ Thumbs.db
 
 # Test directories
 test-install/
+
+# Development files (local only)
+TODO.md
+NOTES.md
+IDEAS.md
+ROADMAP.md
